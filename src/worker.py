@@ -43,8 +43,10 @@ class OCRWorker:
                         {
                             "type": "text",
                             "text": (
-                                "Extract all text from this image strictly. "
-                                "No commentary."
+                                "Extract all text from this image. "
+                                "Preserve the original formatting and structure using markdown. "
+                                "Use headers (#), bold (**), and lists (-) where appropriate. "
+                                "No commentary or explanations."
                             ),
                         },
                         {
@@ -114,9 +116,8 @@ class OCRWorker:
             for chunk in chunks:
                 await self.app.bot.send_message(
                     chat_id=job["chat_id"],
-                    text=f"✅ <b>OCR Result:</b>\n\n{chunk}",
+                    text=f"✅ OCR Result:\n\n{chunk}",
                     reply_to_message_id=job["message_id"],
-                    parse_mode="HTML",
                 )
 
             await mark_job_status(job["id"], "completed")
