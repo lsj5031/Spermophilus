@@ -55,7 +55,7 @@ class OCRWorker:
                 }
             ],
             temperature=0.0,
-            max_tokens=2000,
+            timeout=600,
         )
         return (
             response.choices[0].message.content.strip()
@@ -85,6 +85,25 @@ class OCRWorker:
 
             # Save & Notify
             await save_result(job["file_hash"], extracted_text)
+            
+            # Send to external API (if configured)
+            api_endpoint = os.getenv("RESULTS_API_ENDPOINT")
+            if api_endpoint:
+                try:
+                    import httpx
+                    async with httpx.AsyncClient() as client:
+                        await client.post(
+                            api_endpoint,
+                            json={
+                                "file_hash": job["file_hash"],
+                                "extracted_text": extracted_text,
+                                "worker_id": self.worker_id,
+                            },
+                            timeout=600,
+                        )
+                    log.info("Result sent to API", endpoint=api_endpoint)
+                except Exception as api_error:
+                    log.warning("Failed to send to API", error=str(api_error))
 
             # Send Reply
             # Split message if too long (Telegram limit 4096)

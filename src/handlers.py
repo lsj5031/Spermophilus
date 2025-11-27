@@ -11,7 +11,8 @@ from .utils import calculate_file_hash
 logger = structlog.get_logger()
 TEMP_DIR = Path("data/temp")
 TEMP_DIR.mkdir(parents=True, exist_ok=True)
-ALLOWED_USERS = set(map(int, os.getenv("ALLOWED_USER_IDS", "").split(",")))
+ALLOWED_USERS_STR = os.getenv("ALLOWED_USER_IDS", "")
+ALLOWED_USERS = set(map(int, ALLOWED_USERS_STR.split(","))) if ALLOWED_USERS_STR else set()
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -20,14 +21,17 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_document(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    logger.info("handle_document called")
     if not update.message or not update.effective_user:
+        logger.warning("No message or user")
         return
 
     user_id = update.effective_user.id
+    logger.info("Received message", user_id=user_id, has_document=bool(update.message.document), has_photo=bool(update.message.photo))
 
     # Auth Check
     if user_id not in ALLOWED_USERS:
-        logger.warning("Unauthorized access attempt", user_id=user_id)
+        logger.warning("Unauthorized access attempt", user_id=user_id, allowed_users=ALLOWED_USERS)
         return
 
     # Get File

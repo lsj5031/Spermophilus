@@ -35,7 +35,7 @@ def main():
 
     app.add_handler(CommandHandler("start", start))
     app.add_handler(
-        MessageHandler(filters.Document.PDF | filters.PHOTO, handle_document)
+        MessageHandler(filters.Document.ALL | filters.PHOTO, handle_document)
     )
 
     print("🚀 Bot is running...")
