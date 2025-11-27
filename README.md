@@ -32,7 +32,7 @@ uv run python -m src.main
 
 ## 📋 Prerequisites
 
-- Python 3.11+ (or use Docker)
+- Python 3.13+ (or use Docker)
 - LM Studio with a vision-capable model
 - Telegram Bot Token
 - Poppler utilities (for PDF processing)
@@ -47,7 +47,7 @@ cp .env.example .env
 ### 3. Setup LM Studio
 
 1. Install [LM Studio](https://lmstudio.ai/)
-2. Download a vision model (e.g., `llava-v1.5-7b`)
+2. Download a vision model (e.g., `Qwen3-VL-4B`)
 3. Start the server with:
    - Model: Your chosen vision model
    - Port: 1234 (default)
@@ -93,10 +93,8 @@ Spermophilus/
 ### LM Studio Setup
 
 1. **Install LM Studio**: Download from [lmstudio.ai](https://lmstudio.ai/)
-2. **Search for Vision Models**: Use the search tab to find models like:
-   - `llava-v1.5-7b`
-   - `bakllava-1-8b`
-   - `moondream2`
+2. **Search for Vision Models**: Use the search tab to find:
+   - `Qwen3-VL-4B` (recommended for OCR tasks)
 3. **Download and Load**: Select your model and click "Load"
 4. **Configure Server**:
    - Go to "Speech" tab (⚙️)

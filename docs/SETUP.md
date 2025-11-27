@@ -136,9 +136,7 @@ uv run ruff check
 1. **Open LM Studio**
 2. **Go to Search tab** (🔍)
 3. **Search for vision models**:
-   - `llava-v1.5-7b` (recommended)
-   - `bakllava-1-8b`
-   - `moondream2`
+   - `Qwen3-VL-4B` (recommended for OCR tasks)
 4. **Download** your chosen model (2-8GB)
 
 ### Configure LM Studio Server

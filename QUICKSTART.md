@@ -5,7 +5,7 @@ Get your Spermophilus OCR bot running in minutes!
 ## 🚀 5-Minute Quick Start
 
 ### Prerequisites
-- Python 3.11+ or Docker
+- Python 3.13+ or Docker
 - LM Studio installed
 - Telegram Bot Token
 
@@ -16,7 +16,7 @@ Get your Spermophilus OCR bot running in minutes!
 
 ### Step 2: Setup LM Studio
 1. Install [LM Studio](https://lmstudio.ai/)
-2. Search for `llava-v1.5-7b`
+2. Search for `Qwen3-VL-4B`
 3. Download and load model
 4. Start server on port 1234
 

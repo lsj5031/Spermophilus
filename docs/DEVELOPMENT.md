@@ -38,7 +38,7 @@ Telegram Message → handlers.py → database.py → worker.py → LM Studio
 
 ### Prerequisites
 
-- Python 3.11+
+- Python 3.13+
 - UV package manager
 - Git
 - Code editor (VS Code recommended)
