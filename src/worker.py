@@ -5,7 +5,7 @@ import structlog
 from openai import AsyncOpenAI
 from telegram.ext import Application
 
-from .database import claim_next_job, mark_job_status, save_result
+from .database import claim_next_job, get_job_event, mark_job_status, reset_job_event, save_result
 from .utils import convert_pdf_to_images
 
 logger = structlog.get_logger()
@@ -143,19 +143,26 @@ class OCRWorker:
                 # 1. Check API Health
                 if not await self.is_api_healthy():
                     logger.warning(
-                        "OCR API unavailable. Waiting...", worker_id=self.worker_id
+                        "OCR API unavailable. Hibernating...", worker_id=self.worker_id
                     )
                     await asyncio.sleep(10)
                     continue
 
                 # 2. Claim Job
                 job = await claim_next_job(self.worker_id)
-                if not job:
-                    await asyncio.sleep(1)  # Idle
-                    continue
-
-                # 3. Process
-                await self.process_job(job)
+                if job:
+                    # 3. Process if job found
+                    await self.process_job(job)
+                else:
+                    # Hibernate: wait for job signal with timeout
+                    logger.info("Entering hibernation")
+                    try:
+                        reset_job_event()  # Clear before waiting
+                        event = get_job_event()
+                        await asyncio.wait_for(event.wait(), timeout=30)
+                        logger.info("Woken from hibernation by event signal")
+                    except asyncio.TimeoutError:
+                        logger.info("Hibernation timeout after 30s")
 
             except Exception as e:
                 logger.error("Worker loop crash", error=str(e))

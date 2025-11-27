@@ -1,3 +1,4 @@
+import asyncio
 import time
 from pathlib import Path
 
@@ -6,6 +7,9 @@ import structlog
 
 logger = structlog.get_logger()
 DB_PATH = Path("data/ocr.db")
+
+# Global event for worker hibernation
+_job_available_event = asyncio.Event()
 
 
 async def init_db() -> None:
@@ -74,6 +78,7 @@ async def add_job(chat_id: int, message_id: int, file_hash: str, file_path: str)
         )
         await db.commit()
         logger.info("Job added", chat_id=chat_id, file_hash=file_hash[:8])
+        _job_available_event.set()  # Wake up sleeping worker
         return cursor.lastrowid or 0
 
 
@@ -102,3 +107,13 @@ async def mark_job_status(job_id: int, status: str) -> None:
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("UPDATE jobs SET status = ? WHERE id = ?", (status, job_id))
         await db.commit()
+
+
+def get_job_event():
+    """Return the event for worker to listen on"""
+    return _job_available_event
+
+
+def reset_job_event():
+    """Reset the job available event"""
+    _job_available_event.clear()
