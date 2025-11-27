@@ -1,0 +1,14 @@
+services:
+  ocr-bot:
+    build: .
+    container_name: ocr-bot
+    restart: unless-stopped
+    # Use Host Network to access LM Studio on localhost
+    network_mode: host 
+    environment:
+      - TELEGRAM_BOT_TOKEN=your_token_here
+      - ALLOWED_USER_IDS=123,456
+      - LM_STUDIO_URL=http://localhost:1234/v1
+      - LOG_LEVEL=INFO
+    volumes:
+      - ./data:/app/data 
