@@ -1,5 +1,7 @@
 # Spermophilus - Telegram OCR Bot
 
+![Spermophilus OCR Service](Spermophilus.png)
+
 A resilient Telegram bot that extracts text from images and PDFs using local AI models via LM Studio. Features atomic job processing, deduplication, and structured logging.
 
 ## 🚀 Features
